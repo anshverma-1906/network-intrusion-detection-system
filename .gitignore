@@ -1,0 +1,22 @@
+# Virtual Environment
+venv/
+
+# Logs (too large for GitHub)
+logs/*.json
+logs/*.txt
+logs/*.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# ML Model files (too large)
+*.pkl
+
+# Wireshark captures
+*.pcap
+
+# System files
+.DS_Store
+*.swp
