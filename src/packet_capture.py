@@ -11,6 +11,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from alert_engine import run_checks
+from anomaly_detector import predict_packet
 
 # ── Config ──────────────────────────────────────
 INTERFACE = "eth0"
@@ -84,6 +85,8 @@ def analyze_packet(packet):
               f"ICMP:{stats['icmp']}\n")
     # Run alert engine on every packet
     run_checks(entry)
+    # ── ML Anomaly Detection ─────────────────────
+    predict_packet(entry)
 
 # ── Start Capture ────────────────────────────────
 def start_capture(interface=INTERFACE, count=0):
