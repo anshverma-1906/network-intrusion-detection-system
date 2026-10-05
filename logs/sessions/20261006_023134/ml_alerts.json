@@ -1,5 +1,0 @@
-{"timestamp": "2026-10-06 02:31:56", "type": "ML_ANOMALY", "src_ip": "151.101.193.91", "dst_ip": "10.176.41.122", "protocol": "TCP", "dst_port": 39070, "anomaly_score": -0.6362, "detail": "Score:-0.6362 | Port:39070 | Proto:TCP"}
-{"timestamp": "2026-10-06 02:31:57", "type": "ML_ANOMALY", "src_ip": "104.17.25.14", "dst_ip": "10.176.41.122", "protocol": "TCP", "dst_port": 39900, "anomaly_score": -0.6397, "detail": "Score:-0.6397 | Port:39900 | Proto:TCP"}
-{"timestamp": "2026-10-06 02:31:58", "type": "ML_ANOMALY", "src_ip": "142.250.122.95", "dst_ip": "10.176.41.122", "protocol": "TCP", "dst_port": 47456, "anomaly_score": -0.646, "detail": "Score:-0.6460 | Port:47456 | Proto:TCP"}
-{"timestamp": "2026-10-06 02:31:59", "type": "ML_ANOMALY", "src_ip": "34.107.243.93", "dst_ip": "10.176.41.122", "protocol": "TCP", "dst_port": 37494, "anomaly_score": -0.6425, "detail": "Score:-0.6425 | Port:37494 | Proto:TCP"}
-{"timestamp": "2026-10-06 02:32:00", "type": "ML_ANOMALY", "src_ip": "151.101.193.91", "dst_ip": "10.176.41.122", "protocol": "TCP", "dst_port": 39080, "anomaly_score": -0.6362, "detail": "Score:-0.6362 | Port:39080 | Proto:TCP"}

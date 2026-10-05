@@ -1,22 +1,24 @@
 # Virtual Environment
 venv/
 
-# Logs (too large for GitHub)
-logs/*.json
-logs/*.txt
-logs/*.log
+# All Log Files (too large + private data)
+logs/
 
-# Python cache
+# Python Cache
 __pycache__/
 *.pyc
 *.pyo
 
-# ML Model files (too large)
+# ML Model Files (too large)
 *.pkl
 
-# Wireshark captures
+# Wireshark Captures
 *.pcap
 
-# System files
+# System Files
 .DS_Store
 *.swp
+*.log
+
+# Temp files
+/tmp/

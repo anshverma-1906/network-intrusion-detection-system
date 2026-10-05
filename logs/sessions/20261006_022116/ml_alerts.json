@@ -1,1 +1,0 @@
-{"timestamp": "2026-10-06 02:28:09", "type": "ML_ANOMALY", "src_ip": "151.101.129.91", "dst_ip": "10.176.41.122", "protocol": "TCP", "dst_port": 45246, "anomaly_score": -0.638, "detail": "Score:-0.6380 | Port:45246 | Proto:TCP"}
