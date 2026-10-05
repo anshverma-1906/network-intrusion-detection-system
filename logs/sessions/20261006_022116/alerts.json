@@ -1,0 +1,2 @@
+{"timestamp": "2026-10-06 02:22:50", "type": "PORT_SCAN", "severity": "\ud83d\udfe0 HIGH", "src_ip": "10.176.41.122", "dst_ip": "10.176.0.1", "detail": "Scanned 15 unique ports"}
+{"timestamp": "2026-10-06 02:22:53", "type": "DOS_ATTACK", "severity": "\ud83d\udd34 CRITICAL", "src_ip": "10.176.41.122", "dst_ip": "10.176.0.1", "detail": "100 requests in 5s"}

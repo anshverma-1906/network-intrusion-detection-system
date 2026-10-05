@@ -208,10 +208,46 @@
 <!-- Header -->
 <div class="header">
   <h1>🛡️ NETWORK INTRUSION DETECTION SYSTEM</h1>
-  <div class="status">
-    <div class="dot"></div>
-    <span id="last-update">Connecting...</span>
+  <div style="display:flex; gap:20px; align-items:center;">
+    <div style="font-size:12px; color:#6b7280;">
+      📅 Session: <span id="session-id"
+                        style="color:#00ff88">
+                    Loading...
+                  </span>
+    </div>
+    <div style="font-size:12px; color:#6b7280;">
+      ⏱️ Duration: <span id="duration"
+                         style="color:#00ff88">
+                     0m 0s
+                   </span>
+    </div>
+    <div class="status">
+      <div class="dot"></div>
+      <span id="last-update">Connecting...</span>
+    </div>
   </div>
+</div>
+
+<!-- Session Info Bar -->
+<div style="
+  background: #0d1117;
+  border-bottom: 1px solid #1f2937;
+  padding: 10px 30px;
+  display: flex;
+  gap: 30px;
+  font-size: 12px;
+  color: #6b7280;
+">
+  <span>🖥️ Interface: <b id="s-interface"
+    style="color:#60a5fa">-</b></span>
+  <span>🌐 Local IP: <b id="s-localip"
+    style="color:#60a5fa">-</b></span>
+  <span>🔀 Gateway: <b id="s-gateway"
+    style="color:#60a5fa">-</b></span>
+  <span>📡 Subnet: <b id="s-subnet"
+    style="color:#60a5fa">-</b></span>
+  <span>🕐 Started: <b id="s-start"
+    style="color:#60a5fa">-</b></span>
 </div>
 
 <div class="container">
@@ -334,6 +370,29 @@ async function updateDashboard() {
     const res  = await fetch('/api/stats');
     const data = await res.json();
 
+
+     // ── Session Info ─────────────────────────────────
+if (data.session) {
+  const s = data.session;
+  document.getElementById('session-id').textContent =
+    s.session_id || '-';
+  document.getElementById('duration').textContent =
+    data.duration || '-';
+  document.getElementById('s-interface').textContent =
+    s.interface || '-';
+  document.getElementById('s-localip').textContent =
+    s.local_ip || '-';
+  document.getElementById('s-gateway').textContent =
+    s.gateway || '-';
+  document.getElementById('s-subnet').textContent =
+    s.subnet || '-';
+  document.getElementById('s-start').textContent =
+    s.start_time || '-';
+} else {
+  document.getElementById('session-id').textContent =
+    'No active session';
+}
+ 
     // Stats
     document.getElementById('total-packets').textContent =
       data.total_packets.toLocaleString();
@@ -356,20 +415,54 @@ async function updateDashboard() {
     alertChart.data.datasets[0].data = counts;
     alertChart.update();
 
-    // Alert feed
-    const alertFeed = document.getElementById('alert-feed');
-    if (data.recent_alerts.length > 0) {
-      alertFeed.innerHTML = data.recent_alerts.map(a => `
-        <div class="alert-item">
-          <div class="alert-type">🚨 ${a.type || 'ALERT'}</div>
-          <div class="alert-detail">
-            ${a.src_ip || ''} → ${a.dst_ip || ''}<br>
-            ${a.detail || a.raw || ''}
-          </div>
-          <div class="alert-time">${a.timestamp || ''}</div>
+    // ── Severity Colors ───────────────────────────────
+const ALERT_COLORS = {
+  'DOS_ATTACK'    : '#ef4444',
+  'PORT_SCAN'     : '#f97316',
+  'SSH_BRUTE'     : '#eab308',
+  'REVERSE_SHELL' : '#dc2626',
+  'ICMP_SWEEP'    : '#3b82f6',
+  'BLACKLIST_IP'  : '#7f1d1d',
+  'UDP_FLOOD'     : '#ef4444',
+  'SUSPICIOUS_PORT': '#a855f7'
+};
+
+const ALERT_ICONS = {
+  'DOS_ATTACK'    : '💥',
+  'PORT_SCAN'     : '🔍',
+  'SSH_BRUTE'     : '🔑',
+  'REVERSE_SHELL' : '☠️',
+  'ICMP_SWEEP'    : '📡',
+  'BLACKLIST_IP'  : '🚫',
+  'UDP_FLOOD'     : '🌊',
+  'SUSPICIOUS_PORT': '⚠️'
+};
+
+// ── Alert Feed with Colors ────────────────────────
+const alertFeed = document.getElementById('alert-feed');
+if (data.recent_alerts.length > 0) {
+  alertFeed.innerHTML = data.recent_alerts.map(a => {
+    const color = ALERT_COLORS[a.type] || '#ef4444';
+    const icon  = ALERT_ICONS[a.type]  || '🚨';
+    return `
+      <div class="alert-item"
+           style="border-left-color: ${color};
+                  background: ${color}11;">
+        <div class="alert-type"
+             style="color: ${color}">
+          ${icon} ${a.type || 'ALERT'}
         </div>
-      `).join('');
-    }
+        <div class="alert-detail">
+          ${a.src_ip || ''} → ${a.dst_ip || ''}<br>
+          ${a.detail || a.raw || ''}
+        </div>
+        <div class="alert-time">
+          ${a.timestamp || ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
 
     // ML feed
     const mlFeed = document.getElementById('ml-feed');
@@ -406,10 +499,128 @@ async function updateDashboard() {
       '🔴 Connection Error';
   }
 }
+// ── Export Report Function ────────────────────────
+function exportReport() {
+  fetch('/api/stats')
+    .then(r => r.json())
+    .then(data => {
+      const line = "=".repeat(50);
+      const now  = new Date().toLocaleString();
+
+      const report = [
+        line,
+        "🛡️  NETWORK IDS - SECURITY REPORT",
+        line,
+        `Generated  : ${now}`,
+        `Author     : Ansh`,
+        "",
+        line,
+        "📊 SUMMARY",
+        line,
+        `Total Packets Captured : ${data.total_packets}`,
+        `Total Alerts Fired     : ${data.total_alerts}`,
+        `ML Anomalies Detected  : ${data.total_ml}`,
+        "",
+        line,
+        "📡 PROTOCOL DISTRIBUTION",
+        line,
+        `TCP   : ${data.protocols.TCP   || 0} packets`,
+        `UDP   : ${data.protocols.UDP   || 0} packets`,
+        `ICMP  : ${data.protocols.ICMP  || 0} packets`,
+        `OTHER : ${data.protocols.OTHER || 0} packets`,
+        "",
+        line,
+        "🚨 ALERT TYPE BREAKDOWN",
+        line,
+        ...Object.entries(data.alert_types)
+          .sort((a,b) => b[1]-a[1])
+          .map(([type, count]) =>
+            `${type.padEnd(20)}: ${count} alerts`
+          ),
+        "",
+        line,
+        "🔍 TOP SOURCE IPs",
+        line,
+        ...data.top_ips.map(([ip, count]) =>
+          `${ip.padEnd(20)}: ${count} packets`
+        ),
+        "",
+        line,
+        "🚨 RECENT ALERTS",
+        line,
+        ...data.recent_alerts.map(a =>
+          `[${a.timestamp}] ${a.type} | ` +
+          `${a.src_ip} → ${a.dst_ip} | ${a.detail||''}`
+        ),
+        "",
+        line,
+        "🤖 RECENT ML ANOMALIES",
+        line,
+        ...data.recent_ml.map(a =>
+          `[${a.timestamp}] Score:${a.anomaly_score} | ` +
+          `${a.src_ip} → Port:${a.dst_port} | ${a.protocol}`
+        ),
+        "",
+        line,
+        "⚠️  DISCLAIMER",
+        line,
+        "This report is for educational purposes only.",
+        "Only test on networks you own or have permission.",
+        line,
+      ].join("\n");
+
+      // Download file
+      const blob = new Blob([report],
+                    {type: "text/plain"});
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      a.href     = url;
+      a.download = `ids_report_${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      // Flash button feedback
+      const btn = event.target;
+      btn.textContent = "✅ REPORT DOWNLOADED!";
+      btn.style.background =
+        "linear-gradient(135deg, #3b82f6, #2563eb)";
+      btn.style.color = "#fff";
+      setTimeout(() => {
+        btn.textContent = "📥 EXPORT IDS REPORT";
+        btn.style.background =
+          "linear-gradient(135deg, #00ff88, #00cc6a)";
+        btn.style.color = "#000";
+      }, 2000);
+    });
+}
+
+// Update every 3 seconds
+updateDashboard();
+setInterval(updateDashboard, 3000);
 
 // Update every 3 seconds
 updateDashboard();
 setInterval(updateDashboard, 3000);
 </script>
+<!-- Export Button -->
+<div style="text-align:center; padding:20px 0 30px 0;">
+  <button onclick="exportReport()" style="
+    background: linear-gradient(135deg, #00ff88, #00cc6a);
+    color: #000;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+    font-family: 'Courier New', monospace;
+    transition: opacity 0.2s;
+  "
+  onmouseover="this.style.opacity='0.8'"
+  onmouseout="this.style.opacity='1'">
+    📥 EXPORT IDS REPORT
+  </button>
+</div>
 </body>
 </html>

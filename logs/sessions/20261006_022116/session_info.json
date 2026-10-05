@@ -1,0 +1,12 @@
+{
+  "session_id": "20261006_022116",
+  "start_time": "Tuesday 06 October 2026 02:21:16 AM IST",
+  "interface": "eth0",
+  "local_ip": "10.176.41.122",
+  "gateway": "10.176.0.1",
+  "subnet": "10.176.0.0/16",
+  "end_time": "Tuesday 06 October 2026 02:29:08 AM IST",
+  "total_packets": 322,
+  "total_alerts": 2,
+  "total_ml": 1
+}

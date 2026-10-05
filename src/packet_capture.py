@@ -22,8 +22,13 @@ NET_CONFIG = get_config()
 print_config(NET_CONFIG)
 INTERFACE  = NET_CONFIG["interface"]
 # ── Config ──────────────────────────────────────
-LOG_FILE  = "logs/packets.json"
-os.makedirs("logs", exist_ok=True)
+# ── Session-Based Logging ─────────────────────────
+SESSION_DIR = os.environ.get(
+    'SESSION_LOG_DIR', 'logs'
+)
+os.makedirs(SESSION_DIR, exist_ok=True)
+LOG_FILE = os.path.join(SESSION_DIR, "packets.json")
+print(f"📁 Session log: {LOG_FILE}")
 
 # ── Packet Counter ───────────────────────────────
 stats = {

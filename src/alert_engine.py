@@ -10,8 +10,12 @@ import time
 import json
 import os
 
-os.makedirs("logs", exist_ok=True)
-ALERT_LOG = "logs/alerts.json"
+# ── Session-Based Logging ─────────────────────────
+SESSION_DIR = os.environ.get(
+    'SESSION_LOG_DIR', 'logs'
+)
+os.makedirs(SESSION_DIR, exist_ok=True)
+ALERT_LOG = os.path.join(SESSION_DIR, "alerts.json")
 
 # ── Alert Cooldown (prevent spam) ───────────────
 last_alert = {}

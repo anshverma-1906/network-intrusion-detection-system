@@ -12,8 +12,12 @@ from datetime import datetime
 import pandas as pd
 
 # ── Config ───────────────────────────────────────
-ML_LOG = "logs/ml_alerts.json"
-os.makedirs("logs", exist_ok=True)
+# ── Session-Based Logging ─────────────────────────
+SESSION_DIR = os.environ.get(
+    'SESSION_LOG_DIR', 'logs'
+)
+os.makedirs(SESSION_DIR, exist_ok=True)
+ML_LOG = os.path.join(SESSION_DIR, "ml_alerts.json")
 
 # ── Protocol Map ─────────────────────────────────
 PROTO_MAP = {
