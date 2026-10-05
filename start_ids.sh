@@ -4,6 +4,31 @@
 # Author: Ansh
 # ================================================
 
+# ── Check Dependencies ───────────────────────────
+echo ""
+echo "🔍 Checking dependencies..."
+
+# Check venv exists
+if [ ! -d "venv" ]; then
+    echo "   Creating virtual environment..."
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt -q
+    echo "   ✅ Dependencies installed!"
+else
+    source venv/bin/activate
+    echo "   ✅ Virtual environment ready!"
+fi
+
+# Check Snort installed
+if ! command -v snort &> /dev/null; then
+    echo "   ❌ Snort not found!"
+    echo "   Install: sudo apt install snort -y"
+    exit 1
+else
+    echo "   ✅ Snort found!"
+fi
+
 clear
 echo "================================================"
 echo "🛡️  NETWORK INTRUSION DETECTION SYSTEM"
@@ -70,6 +95,17 @@ sudo sed -i \
   "s|HOME_NET = '[^']*'|HOME_NET = '$SUBNET'|" \
   /etc/snort/snort.lua
 echo "   ✅ HOME_NET = $SUBNET"
+
+# ── Auto Train ML Model if Not Exists ────────────
+echo ""
+echo "🤖 Checking ML Model..."
+if [ ! -f "ml/model.pkl" ]; then
+    echo "   Model not found — Training now..."
+    venv/bin/python3 ml/train_model.py
+    echo "   ✅ Model trained and ready!"
+else
+    echo "   ✅ Model already exists — skipping training"
+fi
 
 # ── Start Snort ──────────────────────────────────
 echo ""

@@ -28,17 +28,51 @@ PROTO_MAP = {
 }
 
 # ── Load Model ───────────────────────────────────
-try:
-    model  = joblib.load("ml/model.pkl")
-    scaler = joblib.load("ml/scaler.pkl")
-    with open("ml/features.json") as f:
-        FEATURES = json.load(f)
-    print("✅ ML Model loaded successfully!")
-    print(f"   Features: {FEATURES}")
-except FileNotFoundError:
-    print("❌ Model not found! Run ml/train_model.py first")
-    model  = None
-    scaler = None
+def load_or_train_model():
+    """Load existing model or train a new one"""
+    global model, scaler, FEATURES
+
+    if os.path.exists(MODEL_PATH) and \
+       os.path.exists(SCALER_PATH):
+        try:
+            model  = joblib.load(MODEL_PATH)
+            scaler = joblib.load(SCALER_PATH)
+            with open(FEATURE_PATH) as f:
+                FEATURES = json.load(f)
+            print("✅ ML Model loaded successfully!")
+            return True
+        except Exception as e:
+            print(f"⚠️  Model load error: {e}")
+
+    # Auto train if model not found
+    print("🤖 Model not found — Auto training...")
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["python3", "ml/train_model.py"],
+            capture_output=True, text=True
+        )
+        if result.returncode == 0:
+            model  = joblib.load(MODEL_PATH)
+            scaler = joblib.load(SCALER_PATH)
+            with open(FEATURE_PATH) as f:
+                FEATURES = json.load(f)
+            print("✅ Model auto-trained and loaded!")
+            return True
+        else:
+            print("❌ Auto-training failed!")
+            print(result.stderr)
+            return False
+    except Exception as e:
+        print(f"❌ Training error: {e}")
+        return False
+
+# Load or train model on startup
+model   = None
+scaler  = None
+FEATURES = []
+load_or_train_model()
+
 
 # ── Cooldown for ML Alerts ───────────────────────
 last_ml_alert = {}
