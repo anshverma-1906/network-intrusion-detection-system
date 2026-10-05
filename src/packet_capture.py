@@ -13,8 +13,15 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from alert_engine import run_checks
 from anomaly_detector import predict_packet
 
+import sys
+sys.path.append('/home/kali/Desktop/network-ids')
+from config import get_config, print_config
+
+# Auto detect network settings
+NET_CONFIG = get_config()
+print_config(NET_CONFIG)
+INTERFACE  = NET_CONFIG["interface"]
 # ── Config ──────────────────────────────────────
-INTERFACE = "eth0"
 LOG_FILE  = "logs/packets.json"
 os.makedirs("logs", exist_ok=True)
 
@@ -89,19 +96,53 @@ def analyze_packet(packet):
     predict_packet(entry)
 
 # ── Start Capture ────────────────────────────────
-def start_capture(interface=INTERFACE, count=0):
+def start_capture(interface=None, count=0):
+    iface    = interface or INTERFACE
+    local_ip = NET_CONFIG["local_ip"]
+
+    # BPF Filter - only capture YOUR device traffic
+    # src or dst must be YOUR IP
+    bpf_filter = f"host {local_ip}"
+
     print(f"""
 ╔══════════════════════════════════════╗
 ║   Network IDS - Packet Capture       ║
-║   Interface : {interface:<22}║
-║   Log File  : {LOG_FILE:<22}║
+║   Interface : {iface:<22}║
+║   Local IP  : {local_ip:<22}║
+║   Filter    : {bpf_filter:<22}║
+║   Mode      : Host-Based IDS         ║
 ║   Press Ctrl+C to stop               ║
 ╚══════════════════════════════════════╝
     """)
-    sniff(iface=interface,
-          prn=analyze_packet,
-          store=False,
-          count=count)
+
+    sniff(
+        iface=iface,
+        prn=analyze_packet,
+        store=False,
+        count=count,
+        filter=bpf_filter    # ← Only YOUR traffic!
+    )
 
 if __name__ == "__main__":
-    start_capture()
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="🛡️ Network IDS - Packet Capture"
+    )
+    parser.add_argument(
+        "-i", "--interface",
+        help="Network interface (default: auto-detect)",
+        default=None
+    )
+    parser.add_argument(
+        "-c", "--count",
+        help="Packet count (0=infinite)",
+        type=int,
+        default=0
+    )
+    args = parser.parse_args()
+
+    start_capture(
+        interface=args.interface,
+        count=args.count
+    )
