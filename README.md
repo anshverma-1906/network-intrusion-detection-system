@@ -244,7 +244,7 @@ This project is for **educational purposes only**.
 **Ansh**
 Cybersecurity Enthusiast | Aspiring Security Analyst
 
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?logo=github)](https://github.com/YOUR_USERNAME)
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?logo=github)](https://github.com/anshverma-1906)
 
 ---
 
