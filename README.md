@@ -6,6 +6,7 @@ to detect real-time network threats and anomalies.
 
 ---
 
+
 ## 📸 Dashboard Preview
 
 ![Dashboard](screenshots/dashboard.png)
