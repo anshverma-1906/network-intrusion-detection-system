@@ -6,7 +6,6 @@ to detect real-time network threats and anomalies.
 
 ---
 
-
 ## 📸 Dashboard Preview
 
 ![Dashboard](screenshots/dashboard.png)
@@ -58,33 +57,33 @@ to detect real-time network threats and anomalies.
 
 ## 📁 Project Structure
 
+```
 network-intrusion-detection-system/
 │
 ├── 📂 src/
-│ ├── packet_capture.py # Live packet capture engine
-│ ├── alert_engine.py # Rule-based detection engine
-│ └── anomaly_detector.py # ML anomaly detection
+│   ├── packet_capture.py    # Live packet capture
+│   ├── alert_engine.py      # Rule-based detection
+│   └── anomaly_detector.py  # ML detection
 │
 ├── 📂 ml/
-│ ├── train_model.py # ML model training script
-│ └── features.json # Feature configuration
+│   ├── train_model.py       # Model training
+│   └── features.json        # Feature config
 │
 ├── 📂 dashboard/
-│ ├── app.py # Flask backend API
-│ └── templates/
-│ └── index.html # Live dashboard UI
+│   ├── app.py               # Flask backend
+│   └── templates/
+│       └── index.html       # Dashboard UI
 │
 ├── 📂 configs/
-│ ├── local.rules # Custom Snort 3 rules
-│ └── snort_backup.lua # Snort configuration
+│   ├── local.rules          # Snort rules
+│   └── snort_backup.lua     # Snort config
 │
-├── 📂 screenshots/ # Dashboard screenshots
-├── config.py # Auto network detection
-├── setup_snort.py # Snort auto-configuration
-├── start_ids.sh # Single command startup
-└── requirements.txt # Python dependencies
-
----
+├── 📂 screenshots/          # Screenshots
+├── config.py                # Auto detection
+├── setup_snort.py           # Snort setup
+├── start_ids.sh             # Start command
+└── requirements.txt         # Dependencies
+```
 
 ## 🚀 Installation & Setup
 
@@ -152,34 +151,34 @@ http://127.0.0.1:5000
 ---
 
 ## 🔧 How It Works
+```
 Network Traffic
-↓
+      ↓
 ┌─────────────────────────────────────┐
-│ Packet Capture (Scapy) │
-│ Filters: host [your-ip] only │
+│         Packet Capture (Scapy)      │
+│     Filters: host [your-ip] only    │
 └──────────────┬──────────────────────┘
-↓
-┌──────────┴──────────┐
-↓ ↓
-┌───────────┐ ┌────────────────┐
-│ Snort │ │ Python Engine │
-│ Rules │ │ Alert Engine │
-│ Detection │ │ ML Detection │
-└───────────┘ └────────────────┘
-↓ ↓
-└──────────┬──────────┘
-↓
-┌──────────────────────┐
-│ JSON Log Files │
-│ (Session-Based) │
-└──────────┬───────────┘
-↓
-┌──────────────────────┐
-│ Flask Dashboard │
-│ (Live Updates) │
-└──────────────────────┘
-
----
+               ↓
+    ┌──────────┴──────────┐
+    ↓                     ↓
+┌───────────┐      ┌────────────────┐
+│   Snort   │      │ Python Engine  │
+│   Rules   │      │ Alert Engine   │
+│ Detection │      │ ML Detection   │
+└───────────┘      └────────────────┘
+    ↓                     ↓
+    └──────────┬──────────┘
+               ↓
+    ┌──────────────────────┐
+    │   JSON Log Files     │
+    │  (Session-Based)     │
+    └──────────┬───────────┘
+               ↓
+    ┌──────────────────────┐
+    │   Flask Dashboard    │
+    │   (Live Updates)     │
+    └──────────────────────┘
+```
 
 ## 🤖 Machine Learning
 
@@ -214,19 +213,21 @@ sudo venv/bin/python3 src/packet_capture.py -i wlan0
 
 ## 📝 Sample Alert Output
 ==============================================
+```
 🚨 ALERT FIRED!
-Time : 2026-10-10 02:23:34
-Type : PORT_SCAN
-Severity : 🟠 HIGH
-Source : 192.168.1.50
-Target : 192.168.1.1
-Detail : Scanned 15 unique ports
+   Time     : 2026-10-10 02:23:34
+   Type     : PORT_SCAN
+   Severity : 🟠 HIGH
+   Source   : 192.168.1.50
+   Target   : 192.168.1.1
+   Detail   : Scanned 15 unique ports
+
 🤖 ML ANOMALY DETECTED!
-Source : 151.101.193.91
-Target : 10.176.41.122
-Protocol : TCP
-Port : 53198
-Score : -0.6475
+   Source   : 151.101.193.91
+   Protocol : TCP
+   Port     : 53198
+   Score    : -0.6475
+```
 ---
 
 ## ⚠️ Disclaimer
