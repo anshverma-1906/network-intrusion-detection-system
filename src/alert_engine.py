@@ -37,8 +37,6 @@ ssh_tracker     = defaultdict(list)
 
 # ── Blacklisted IPs ──────────────────────────────
 BLACKLIST = {
-    "10.0.0.99",
-    "192.168.1.200",
 }
 
 # ── Suspicious Ports ─────────────────────────────
