@@ -56,6 +56,7 @@ to detect real-time network threats and anomalies.
 ---
 
 ## 📁 Project Structure
+
 network-intrusion-detection-system/
 │
 ├── 📂 src/
